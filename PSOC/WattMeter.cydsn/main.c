@@ -14,9 +14,11 @@
 
 volatile bool timerTick;
 
-CY_ISR(isr_Timer_1k)
+CY_ISR(isr_Timer_Tick)
 {
-    timerTick = true;    
+    // Cleat the interrupt, this must be done in SW
+    Timer_Tick_ClearInterrupt(Timer_Tick_INTR_MASK_TC);
+    timerTick = true;
 }
 
 int main(void)
@@ -31,9 +33,9 @@ int main(void)
     ADC_SAR_Seq_IRQ_Enable();
     IDAC8_Start();
     
-    isr_Timer_1k_StartEx(isr_Timer_1k);
-    isr_Timer_1k_Enable();
-    Timer_1k_Start();
+    isr_Timer_Tick_StartEx(isr_Timer_Tick);
+    isr_Timer_Tick_Enable();
+    Timer_Tick_Start();
     
     for(;;)
     {
