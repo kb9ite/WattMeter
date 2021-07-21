@@ -9,18 +9,14 @@
  *
  * ========================================
 */
-#ifndef CAL_H
-#define CAL_H
+#ifndef METER_H
+#define METER_H
 
 #include "types.h"
     
-extern const power32b16 FwdPowerCal[4096];
-extern const power32b16 RefPowerCal[4096];
-
-extern const unsigned short FiltUpCal[256];
-extern const unsigned short FiltDownCal[256];
-
+void Meter_SetPower200(power32b16 power);
+void Meter_SetPower2000(power32b16 power);
+void Meter_SetSWR(swr32b16 swr);
     
 #endif
-
 /* [] END OF FILE */

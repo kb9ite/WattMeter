@@ -119,12 +119,14 @@ uint8_t u8x8_hw_spi(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)
             SPI_SpiUartPutArray(arg_ptr, arg_int);
             CY_NOP;
             CY_NOP;
-            //CyDelay(1);
             while(SPI_SpiIsBusBusy() != 0)
             {
                 //Spin wait for transfer to be complete
             }
-            
+            for(int i = 0; i < 10; i++)
+            {
+                CY_NOP;
+            }
             break;
         case U8X8_MSG_BYTE_INIT:
             break;

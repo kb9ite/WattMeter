@@ -14,37 +14,35 @@
 #include "cal.h"
 
 int FwdRaw;
-int FwdCal;
-int FwdFilt;
-int RefRaw;
-int RefCal;
-int RefFilt;
-int Pot;
-int VSupply;
+power32b16 FwdCal;
+power32b16 FwdFilt;
 
-int Debug_SampleCount;
+int RefRaw;
+power32b16 RefCal;
+power32b16 RefFilt;
+
+int FiltUp = 100;
+int FiltDown = 100;
 
 void ADC_SAR_Seq_ISR_InterruptCallback(void)
 {
-    Control_Reg_Control ^= 4;
-    Control_Reg_Control |= 2;
+    Output_Reg_Control |= 0x10;
+    
     // Read the inputs and calibrate them
     FwdRaw = ADC_SAR_Seq_GetResult16(0);
-    FwdCal = PowerCal[FwdRaw & 0x0FFF];
+    FwdCal = FwdPowerCal[FwdRaw & 0x0FFF];
     RefRaw = ADC_SAR_Seq_GetResult16(1);
-    RefCal = PowerCal[RefRaw & 0x0FFF];
-    Pot = (ADC_SAR_Seq_GetResult16(2) >> 4) & 0x000000FF;
-    VSupply = ADC_SAR_Seq_GetResult16(3);
+    RefCal = RefPowerCal[RefRaw & 0x0FFF];
+    
     
     // Compute the filtered powers    
-    int filt = FwdCal > FwdFilt ? FiltUpCal[Pot] : FiltDownCal[Pot];
-    FwdFilt = ((FwdCal * filt) + (FwdFilt * (65535 - filt))) >> 18;
+    int filt = FwdCal > FwdFilt ? FiltUp : FiltDown;
+    FwdFilt = (((int64)FwdCal * filt) + ((int64)FwdFilt * (65536 - filt))) >> 16;
     
-    filt = RefCal > RefFilt ? FiltUpCal[Pot] : FiltDownCal[Pot];
-    RefFilt = ((RefCal * filt) + (RefFilt * (65535 - filt))) >> 18;
-    
-    Debug_SampleCount++;
-    Control_Reg_Control &= 0xFD;
+    filt = RefCal > RefFilt ? FiltUp : FiltDown;
+    RefFilt = (((int64)RefCal * filt) + ((int64)RefFilt * (65536 - filt))) >> 16;
+
+    Output_Reg_Control &= 0xEF;
 }
 
 /* [] END OF FILE */

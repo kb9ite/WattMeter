@@ -12,15 +12,18 @@
 #ifndef ADC_H
 #define ADC_H
 
+#include "types.h"
+    
 extern int FwdRaw;
-extern int FwdCal;
-extern int FwdFilt;
+extern power32b16 FwdCal;
+extern power32b16 FwdFilt;
 extern int RefRaw;
-extern int RefCal;
-extern int RefFilt;
-extern int Pot;
-extern int VSupply;
+extern power32b16 RefCal;
+extern power32b16 RefFilt;
 
+extern int FiltUp;
+extern int FiltDown;
+    
 void ADC_SAR_Seq_ISR_InterruptCallback(void);
 
 #endif

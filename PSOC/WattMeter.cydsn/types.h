@@ -9,18 +9,18 @@
  *
  * ========================================
 */
-#ifndef CAL_H
-#define CAL_H
 
-#include "types.h"
+#ifndef TYPES_H_
+#define TYPES_H_
+
+#define MAX(a, b) ((a > b) ? (a) : (b))
+#define MIN(a, b) ((a < b) ? (a) : (b))
     
-extern const power32b16 FwdPowerCal[4096];
-extern const power32b16 RefPowerCal[4096];
-
-extern const unsigned short FiltUpCal[256];
-extern const unsigned short FiltDownCal[256];
-
+#define WATT2INTPOWER(x) ((int)(x * 65536))
+#define SWR2INTSWR(x)    ((int)(x * 65536))
+    
+typedef int power32b16;
+typedef int swr32b16;
     
 #endif
-
 /* [] END OF FILE */
